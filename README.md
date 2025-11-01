@@ -62,4 +62,83 @@ A configuração do **Amazon Route 53** garante que:
   - `CafeInstance1` → Zona de Disponibilidade **us-west-2a**  
   - `CafeInstance2` → Zona de Disponibilidade **us-west-2b**  
 - Acesse cada URL para confirmar que o aplicativo está funcionando.  
-- Exemplo:  
+- Exemplo:
+
+- 
+---
+
+### **2️⃣ Configurar a Verificação de Integridade (Health Check)**
+
+- **Nome:** `Primary-Website-Health`
+- **Tipo:** Endpoint HTTP  
+- **Endereço IP:** público da instância `CafeInstance1`
+- **Caminho:** `/cafe`
+- **Intervalo de verificação:** 10 segundos  
+- **Falhas permitidas:** 2  
+- **Notificação:**  
+- Criar novo tópico SNS: `Primary-Website-Health`  
+- Inserir e-mail pessoal e **confirmar inscrição via link do e-mail**  
+
+---
+
+### **3️⃣ Criar os Registros DNS no Route 53**
+
+#### 🔸 Registro Primário
+| Campo | Valor |
+|--------|--------|
+| Nome do registro | `www` |
+| Tipo | A (IPv4) |
+| Valor | IP da instância Café 1 |
+| Política de roteamento | Failover |
+| Tipo de registro | Primário |
+| Health Check | Primary-Website-Health |
+
+#### 🔸 Registro Secundário
+| Campo | Valor |
+|--------|--------|
+| Nome do registro | `www` |
+| Tipo | A (IPv4) |
+| Valor | IP da instância Café 2 |
+| Política de roteamento | Failover |
+| Tipo de registro | Secundário |
+| Health Check | *(não aplicável)* |
+
+---
+
+### **4️⃣ Testar o Failover**
+
+1. Acesse o site principal:
+
+2. Confirme que está rodando a partir da **AZ primária**.  
+3. No Console EC2, pare a instância **CafeInstance1**.  
+4. Aguarde o Health Check mudar para **Unhealthy**.  
+5. Atualize o site no navegador — ele agora deve carregar a instância **Café 2** (secundária).  
+6. Verifique seu e-mail — um alerta SNS deve ter sido recebido.  
+
+---
+
+## 📬 Resultados
+
+- ✅ Failover automático entre Zonas de Disponibilidade  
+- ✅ Alerta SNS recebido por e-mail  
+- ✅ Site do Café disponível mesmo após falha do servidor primário  
+- ✅ Arquitetura resiliente e tolerante a falhas  
+
+---
+
+## ☁️ Tecnologias Utilizadas
+
+| Serviço | Função |
+|----------|--------|
+| **Amazon EC2** | Hospedagem das instâncias do site Café |
+| **Amazon Route 53** | Roteamento DNS e failover |
+| **Amazon SNS** | Envio de alertas automáticos |
+| **AWS CloudFormation** | Criação automatizada da infraestrutura |
+| **LAMP Stack (Linux, Apache, MySQL, PHP)** | Ambiente do aplicativo web |
+
+---
+
+## 🧩 Estrutura de Pastas Sugerida
+
+
+
