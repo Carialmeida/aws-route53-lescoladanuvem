@@ -37,3 +37,29 @@ A configuração do **Amazon Route 53** garante que:
 
 ## 🧩 Arquitetura do Projeto
 
+
+📷 **Descrição:**
+- **Café 1**: instância EC2 principal, rodando em `us-west-2a`
+- **Café 2**: instância EC2 secundária, rodando em `us-west-2b`
+- **Route 53**: realiza health check e roteamento DNS
+- **SNS**: envia alertas quando o site primário estiver inativo  
+
+---
+
+## 🎯 Objetivos do Laboratório
+
+- ✅ Criar e configurar uma **verificação de integridade (Health Check)** no Route 53  
+- ✅ Configurar **roteamento de failover** entre duas instâncias EC2  
+- ✅ Configurar **notificações por e-mail** via SNS  
+- ✅ Simular falha no servidor primário e verificar failover automático  
+
+---
+
+## ⚙️ Etapas do Projeto
+
+### **1️⃣ Confirmar os sites do Café**
+- Duas instâncias EC2 já criadas:  
+  - `CafeInstance1` → Zona de Disponibilidade **us-west-2a**  
+  - `CafeInstance2` → Zona de Disponibilidade **us-west-2b**  
+- Acesse cada URL para confirmar que o aplicativo está funcionando.  
+- Exemplo:  
